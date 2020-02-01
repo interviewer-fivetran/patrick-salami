@@ -8,12 +8,39 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.fivetran.news.DateUtil.dateToString;
 import static org.junit.Assert.*;
 
+
+
 public class Spec {
+
+    @Test
+    public void exploreApi() {
+        NewspaperApi api = new RealNewspaperApi();
+        LocalDate earliestDate = api.earliestStoryPublishDate();
+        System.out.println(earliestDate);
+
+        Optional<NewspaperResponse> optionalResponse = api.getStories(earliestDate, 1);
+
+        assertTrue(optionalResponse.isPresent());
+        NewspaperResponse response = optionalResponse.get();
+        System.out.printf("count: %d, offset: %d, total: %d, num stories: %d\n",
+                response.count,  // will always be 0 or 1
+                response.offset, // identifies offset for the specified date
+                response.total, // number of stories for specified date
+
+                // will always be 0 or 1
+                response.stories.size() );
+        for(NewspaperStory story : response.stories) {
+            System.out.println(story.headline);
+            System.out.println(story.publishedOn);
+        }
+    }
+
     @Test
     public void main() {
         NewspaperState state = new NewspaperState();
