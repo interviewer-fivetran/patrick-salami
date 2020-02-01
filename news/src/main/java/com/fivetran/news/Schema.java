@@ -1,6 +1,7 @@
 package com.fivetran.news;
 
 import com.fivetran.news.core.Table;
+import com.fivetran.news.core.ValueType;
 
 public class Schema {
     // Table names
@@ -13,7 +14,15 @@ public class Schema {
     static final String COUNT_DATE_COLUMN = "countDate";
     static final String COUNTS_COLUMN = "counts";
 
-    static final Table STORIES = new Table.Builder(STORIES_TABLE_NAME).build();
+    static final Table STORIES = new Table.Builder(STORIES_TABLE_NAME)
+            .addColumn(HEADLINE_COLUMN, ValueType.String, true)
+            .addColumn(PUBLISH_DATE_COLUMN, ValueType.String)
+            .build();
 
-    static final Table STORY_COUNTS = new Table.Builder(STORY_COUNTS_TABLE_NAME).build();
+
+    static final Table STORY_COUNTS = new Table.Builder(STORY_COUNTS_TABLE_NAME)
+            .addColumn(HEADLINE_COLUMN, ValueType.String, true, STORIES.columns.get(HEADLINE_COLUMN))
+            .addColumn(COUNT_DATE_COLUMN, ValueType.String, true)
+            .addColumn(COUNTS_COLUMN, ValueType.Int)
+            .build();
 }
